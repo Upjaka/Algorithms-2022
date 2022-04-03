@@ -154,7 +154,7 @@ public class JavaAlgorithms {
      */
     static public int calcPrimesNumber(int limit) {
         // Используется решето Аткина
-        // O(n) - два цикл с n итерациями и два цикла с sqrt(n) инерациями
+        // O(n/log(log(n))) - оценека авторов алгоритма
         // R(n) - один массив размера n + 1
         if (limit > 1) {
             int sqr_lim = (int) Math.sqrt(limit);

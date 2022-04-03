@@ -159,7 +159,7 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          */
         @Override
         // O(1) - фиксированное количесвто операций, операции с очередью выполняются за О(1)
-        // R(n) - используется Queue размером n
+        // R(1) - дополнительной памяти не используется
         public boolean hasNext() {
             return !nodeQueue.isEmpty();
         }
@@ -180,7 +180,7 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
         @Override
         public T next() {
             // O(1) - фиксированное количесвто операций, операции с очередью выполняются за О(1)
-            // R(n) - используется Queue размером n
+            // R(1) - дополнительной памяти не используется
             current = nodeQueue.poll();
             if (current == null)
                 throw new NoSuchElementException();
