@@ -98,8 +98,8 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
      */
     @Override
     public boolean remove(Object o) {
-        // O(log(n)) - найти удаляемый элемент это O(log(n)) + O(Iterator.remove) = O(log(n))
-        // R(n) - итератор использует Queue размером n
+        // T = O(log(n)) - найти удаляемый элемент это O(log(n)) + O(Iterator.remove) = O(log(n))
+        // R = O(n) - итератор использует Queue размером n
         if (o == null)
             return false;
         Iterator<T> iterator = iterator();
@@ -158,8 +158,8 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          * Средняя
          */
         @Override
-        // O(1) - фиксированное количесвто операций, операции с очередью выполняются за О(1)
-        // R(1) - дополнительной памяти не используется
+        // T = O(1) - фиксированное количесвто операций, операции с очередью выполняются за О(1)
+        // R = O(1) - дополнительной памяти не используется
         public boolean hasNext() {
             return !nodeQueue.isEmpty();
         }
@@ -179,8 +179,8 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          */
         @Override
         public T next() {
-            // O(1) - фиксированное количесвто операций, операции с очередью выполняются за О(1)
-            // R(1) - дополнительной памяти не используется
+            // T = O(1) - фиксированное количесвто операций, операции с очередью выполняются за О(1)
+            // R = O(1) - дополнительной памяти не используется
             current = nodeQueue.poll();
             if (current == null)
                 throw new NoSuchElementException();
@@ -202,9 +202,9 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          */
         @Override
         public void remove() {
-            // O(log(n)) - сначала ищем самый большой элемент в левом поддереве, потом родителя для удаляемого элемента
+            // T = O(log(n)) - сначала ищем самый большой элемент в левом поддереве, потом родителя для удаляемого элемента
             //             в худшем случае мы один раз пройдем дерево целиком, а высота дерева log(n)
-            // R(1) - используется фиксированное количество памяти
+            // R = O(1) - используется фиксированное количество памяти
             if (current == null) {
                 throw new IllegalStateException();
             }

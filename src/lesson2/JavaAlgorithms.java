@@ -38,8 +38,8 @@ public class JavaAlgorithms {
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
     static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) {
-        // O(n) - один цикл с n итерациями
-        // R(1) - используемая память не зависит от n
+        // T = O(n) - один цикл с n итерациями
+        // R = O(1) - используемая память не зависит от n
         int resultRight = 0;
         int resultLeft = 0;
         int left = 0;
@@ -154,8 +154,8 @@ public class JavaAlgorithms {
      */
     static public int calcPrimesNumber(int limit) {
         // Используется решето Аткина
-        // O(n/log(log(n))) - оценека авторов алгоритма
-        // R(n) - один массив размера n + 1
+        // T = O(n/log(log(n))) - оценека авторов алгоритма
+        // R = O(n) - один массив размера n + 1
         if (limit > 1) {
             int sqr_lim = (int) Math.sqrt(limit);
             boolean[] is_prime = new boolean[limit + 1];
