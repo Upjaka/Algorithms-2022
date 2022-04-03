@@ -161,7 +161,7 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
         // O(1) - фиксированное количесвто операций, операции с очередью выполняются за О(1)
         // R(n) - используется Queue размером n
         public boolean hasNext() {
-            return nodeQueue.isEmpty();
+            return !nodeQueue.isEmpty();
         }
 
         /**
