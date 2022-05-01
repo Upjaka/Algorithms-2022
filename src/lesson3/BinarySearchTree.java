@@ -98,7 +98,7 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
      */
     @Override
     public boolean remove(Object o) {
-        // T = O(log(n)) - найти удаляемый элемент это O(log(n)) + O(Iterator.remove) = O(log(n))
+        // T = O(n) - найти удаляемый элемент это O(n) + O(Iterator.remove) = O(n)
         // R = O(n) - итератор использует Queue размером n
         if (o == null)
             return false;

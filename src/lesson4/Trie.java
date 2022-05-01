@@ -1,7 +1,10 @@
 package lesson4;
 
 import java.util.*;
+
 import kotlin.NotImplementedError;
+import kotlin.Pair;
+import lesson3.BinarySearchTree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -84,16 +87,83 @@ public class Trie extends AbstractSet<String> implements Set<String> {
 
     /**
      * Итератор для префиксного дерева
-     *
+     * <p>
      * Спецификация: {@link Iterator} (Ctrl+Click по Iterator)
-     *
+     * <p>
      * Сложная
      */
     @NotNull
     @Override
     public Iterator<String> iterator() {
-        // TODO
-        throw new NotImplementedError();
+        return new TrieIterator();
     }
 
+    public class TrieIterator implements Iterator<String> {
+        private String lastString;
+        private final Queue<String> strings;
+
+        private TrieIterator() {
+            strings = new ArrayDeque<>();
+            subtreeTraversal(root, "");
+        }
+
+        private void subtreeTraversal(Node current, String str) {
+            for (char character : current.children.keySet()) {
+                if (character == (char) 0)
+                    strings.add(str);
+                else
+                    subtreeTraversal(current.children.get(character), str + character);
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            // T = O(1) операции с очередью выполняются за О(1)
+            // R = O(1) дополнительной памяти не используется
+            return !strings.isEmpty();
+        }
+
+        @Override
+        public String next() {
+            // T = O(1) операции с очередью выполняются за О(1)
+            // R = O(1) дополнительной памяти не используется
+            String str = strings.poll();
+            if (str == null)
+                throw new NoSuchElementException();
+            else {
+                lastString = str;
+                return str;
+            }
+        }
+
+
+        @Override
+        public void remove() {
+            // T = O(maxLength) - поиск узла в худшем случае это maxLength операций и удаление "лишних" узлов также
+            //                    maxLength операций
+            // R = O(maxLength) - стек имеет в худшем случае maxLength элементов
+            if (lastString == null) {
+                throw new IllegalStateException();
+            }
+            Node currentNode = root;
+            Stack<Pair<Character, Node>> path = new Stack<>();
+            path.push(new Pair<>((char) 0, currentNode));
+            for (char character : lastString.toCharArray()) {
+                currentNode = currentNode.children.get(character);
+                path.push(new Pair<>(character, currentNode));
+            }
+            currentNode.children.remove((char) 0);
+            lastString = null;
+            size--;
+
+            Pair<Character, Node> pair;
+            while (path.peek().getSecond() != root) {
+                pair = path.pop();
+                if (pair.getSecond().children.size() == 0) {
+                    // Удаление "лишних" узлов, которые не являются частью никакой строки
+                    path.peek().getSecond().children.remove(pair.getFirst());
+                }
+            }
+        }
+    }
 }
