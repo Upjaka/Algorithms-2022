@@ -101,7 +101,7 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
     @Override
     public boolean remove(Object o) {
         // T = O(1 / (1 - А)) - зависит от коэффициента заполнения A
-        // R = O(1) - дополнительной памяти не используется
+        // R = O(1) - дополнительная память не зависит от размера таблицы
         int index = startingIndex(o);
         final int startingIndex = index;
         Object current = storage[index];
@@ -152,14 +152,14 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
         @Override
         public boolean hasNext() {
             // T = O(1) - фиксированное количесвто операций
-            // R = O(1) - дополнительной памяти не используется
+            // R = O(1) - дополнительной памяти не требуется
             return index < capacity;
         }
 
         @Override
         public T next() {
             // T = O(1 / А) - зависит от коэффициента заполнения A
-            // R = O(1) - дополнительной памяти не используется
+            // R = O(1) - дополнительная память не зависит от размера таблицы
             if (index == capacity) throw new NoSuchElementException();
             T t = (T) storage[index];
             lastElemIndex = index;
@@ -171,7 +171,7 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
         @Override
         public void remove() {
             // T = O(1) - фиксированное количесвто операций
-            // R = O(1) - дополнительной памяти не используется
+            // R = O(1) - дополнительной памяти не требуется
             if (lastElemIndex == null) {
                 throw new IllegalStateException();
             }
