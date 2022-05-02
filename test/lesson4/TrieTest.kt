@@ -41,5 +41,6 @@ class TrieTest : AbstractTrieTest() {
         iterator.next()
         iterator.remove()
         assertTrue(trieSet.size == 0)
+        assertFalse(trieSet.contains("abc"))
     }
 }

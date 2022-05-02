@@ -5,9 +5,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.AbstractSet;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 public class OpenAddressingSet<T> extends AbstractSet<T> {
+
+    private enum Delete {
+        DELETED
+    }
 
     private final int bits;
 
@@ -54,10 +59,10 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
 
     /**
      * Добавление элемента в таблицу.
-     *
+     * <p>
      * Не делает ничего и возвращает false, если такой же элемент уже есть в таблице.
      * В противном случае вставляет элемент в таблицу и возвращает true.
-     *
+     * <p>
      * Бросает исключение (IllegalStateException) в случае переполнения таблицы.
      * Обычно Set не предполагает ограничения на размер и подобных контрактов,
      * но в данном случае это было введено для упрощения кода.
@@ -67,7 +72,7 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
         int startingIndex = startingIndex(t);
         int index = startingIndex;
         Object current = storage[index];
-        while (current != null) {
+        while (current != null && current != Delete.DELETED) {
             if (current.equals(t)) {
                 return false;
             }
@@ -84,34 +89,95 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
 
     /**
      * Удаление элемента из таблицы
-     *
+     * <p>
      * Если элемент есть в таблица, функция удаляет его из дерева и возвращает true.
      * В ином случае функция оставляет множество нетронутым и возвращает false.
      * Высота дерева не должна увеличиться в результате удаления.
-     *
+     * <p>
      * Спецификация: {@link Set#remove(Object)} (Ctrl+Click по remove)
-     *
+     * <p>
      * Средняя
      */
     @Override
     public boolean remove(Object o) {
-        return super.remove(o);
+        // T = O(1 / (1 - А)) - зависит от коэффициента заполнения A
+        // R = O(1) - дополнительной памяти не используется
+        int index = startingIndex(o);
+        final int startingIndex = index;
+        Object current = storage[index];
+        if (current == null) return false;
+        while (!current.equals(o)) {
+            index = (index + 1) % capacity;
+            current = storage[index];
+            if (current == null) return false;
+            if (index == startingIndex) {
+                return false;
+            }
+        }
+        storage[index] = Delete.DELETED;
+        size--;
+        return true;
     }
 
     /**
      * Создание итератора для обхода таблицы
-     *
+     * <p>
      * Не забываем, что итератор должен поддерживать функции next(), hasNext(),
      * и опционально функцию remove()
-     *
+     * <p>
      * Спецификация: {@link Iterator} (Ctrl+Click по Iterator)
-     *
+     * <p>
      * Средняя (сложная, если поддержан и remove тоже)
      */
     @NotNull
     @Override
     public Iterator<T> iterator() {
-        // TODO
-        throw new NotImplementedError();
+        return new OpenAddressingSetIterator();
+    }
+
+    public class OpenAddressingSetIterator implements Iterator<T> {
+        private int index = 0;
+        private Integer lastElemIndex = null;
+
+        public OpenAddressingSetIterator() {
+            findNext();
+        }
+
+        private void findNext() {
+            while (index < capacity && (storage[index] == null || storage[index] == Delete.DELETED)) {
+                index++;
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            // T = O(1) - фиксированное количесвто операций
+            // R = O(1) - дополнительной памяти не используется
+            return index < capacity;
+        }
+
+        @Override
+        public T next() {
+            // T = O(1 / А) - зависит от коэффициента заполнения A
+            // R = O(1) - дополнительной памяти не используется
+            if (index == capacity) throw new NoSuchElementException();
+            T t = (T) storage[index];
+            lastElemIndex = index;
+            index++;
+            findNext();
+            return t;
+        }
+
+        @Override
+        public void remove() {
+            // T = O(1) - фиксированное количесвто операций
+            // R = O(1) - дополнительной памяти не используется
+            if (lastElemIndex == null) {
+                throw new IllegalStateException();
+            }
+            storage[lastElemIndex] = Delete.DELETED;
+            lastElemIndex = null;
+            size--;
+        }
     }
 }
