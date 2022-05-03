@@ -99,7 +99,7 @@ public class Trie extends AbstractSet<String> implements Set<String> {
     }
 
     public class TrieIterator implements Iterator<String> {
-        private String lastString;
+        private String lastString = null;
         private final Queue<String> strings;
 
         private TrieIterator() {
