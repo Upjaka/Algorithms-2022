@@ -1,12 +1,10 @@
 package lesson7;
 
 import kotlin.NotImplementedError;
-import lesson3.BinarySearchTree;
 
 import java.io.*;
 import java.util.*;
 
-import static java.lang.Integer.max;
 import static java.lang.Integer.min;
 
 @SuppressWarnings("unused")
