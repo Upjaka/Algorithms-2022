@@ -41,26 +41,26 @@ public class JavaDynamicTasks {
         // T = O(N^2) - два вложенных цикла дают O(N^2)
         // R = O(N) - используются списки или массивы ддлиной N
         if (list.size() < 2) return list;
-        // d[i] - последовательность какой длины заканчивается элементом a[i]
-        int[] d = new int[list.size()];
+        // l[i] - последовательность какой длины заканчивается элементом a[i]
+        int[] l = new int[list.size()];
         // prev[i] - позиция предыдущего элемента в подпоследовательности для a[i]
         int[] prev = new int[list.size()];
         int maxLength = 1;
         for (int i = 0; i < list.size(); i++) {
-            d[i] = 1;
+            l[i] = 1;
             prev[i] = -1;
             for (int j = 0; j < i; j++) {
-                if (list.get(j) <= list.get(i) && d[j] + 1 > d[i]) {
-                    d[i] = d[j] + 1;
+                if (list.get(j) <= list.get(i) && l[j] + 1 > l[i]) {
+                    l[i] = l[j] + 1;
                     prev[i] = j;
-                    if (d[i] > maxLength) maxLength = d[i];
+                    if (l[i] > maxLength) maxLength = l[i];
                 }
             }
         }
         // Нахождение всех подпоследовательностей с максимальной длиной
         List<Integer[]> subSequences = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            if (d[i] == maxLength) {
+            if (l[i] == maxLength) {
                 subSequences.add(0, new Integer[maxLength]);
                 subSequences.get(0)[maxLength - 1] = i;
                 int prevIndex = prev[i];
