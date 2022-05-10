@@ -39,7 +39,7 @@ public class JavaGraphTasks {
         // R = O(E) - два списка размером E
 
         // Проверка сущесвтования эйлерова цикла
-        if (graph.getVertices().size() < 2) return new ArrayList<>();
+        if (graph.getVertices().size() < 3) return new ArrayList<>();
         Set<Graph.Vertex> visited = new HashSet<>(graph.getVertices().size());
         boolean loopExist = dfs(graph, graph.getVertices().iterator().next(), visited);
         if (!loopExist || visited.size() != graph.getVertices().size()) return new ArrayList<>();
