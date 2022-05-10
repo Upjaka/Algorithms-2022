@@ -5,7 +5,6 @@ import lesson6.impl.GraphBuilder;
 
 import java.util.*;
 
-@SuppressWarnings("unused")
 public class JavaGraphTasks {
     /**
      * Эйлеров цикл.
@@ -54,7 +53,7 @@ public class JavaGraphTasks {
     //
     private static void eulerLoop(Graph graph, Graph.Vertex start, Set<Graph.Edge> visited, List<Graph.Edge> result) {
         Map<Graph.Vertex, Graph.Edge> connections = graph.getConnections(start);
-        for (Graph.Vertex vertex: connections.keySet()) {
+        for (Graph.Vertex vertex : connections.keySet()) {
             if (!visited.contains(connections.get(vertex))) {
                 visited.add(connections.get(vertex));
                 eulerLoop(graph, vertex, visited, result);
@@ -104,22 +103,23 @@ public class JavaGraphTasks {
      * J ------------ K
      */
     public static Graph minimumSpanningTree(Graph graph) {
-        // T = O(VE) - Для каждой из V вершин находим ее соседей, что состовляет в сумме 2Е операций,
-        // итого трудоемкость состовления оставного дерева составляет О(2EV) = О(EV).
-        // R = O(V) - массив, очередь и map имеют размер V.
+        // T = O(E) - Для каждого ребра мы добавляем в граф вершины, которых еще там нет и соединяем их ребром.
+        // R = O(V) - множество размером V.
 
         GraphBuilder graphBuilder = new GraphBuilder();
         // Запоминаем, какие вершины присоединены к остовному дереву
         Set<String> connected = new HashSet<>(graph.getVertices().size());
 
-        for (Graph.Vertex vertex : graph.getVertices()) {
-            graphBuilder.addVertex(vertex.getName());
-            for (Graph.Vertex neighbor : graph.getNeighbors(vertex)) {
-                if (!connected.contains(neighbor.getName())) {
-                    graphBuilder.addConnection(vertex, neighbor, 1);
-                    connected.add(neighbor.getName());
-                    connected.add(vertex.getName());
-                }
+        for (Graph.Edge edge : graph.getEdges()) {
+            if (!connected.contains(edge.getBegin().getName())) {
+                connected.add(edge.getBegin().getName());
+                graphBuilder.addVertex(edge.getBegin().getName());
+                graphBuilder.addConnection(edge.getBegin(), edge.getEnd(), 1);
+            }
+            if (!connected.contains(edge.getEnd().getName())) {
+                connected.add(edge.getEnd().getName());
+                graphBuilder.addVertex(edge.getEnd().getName());
+                graphBuilder.addConnection(edge.getBegin(), edge.getEnd(), 1);
             }
         }
         return graphBuilder.build();
