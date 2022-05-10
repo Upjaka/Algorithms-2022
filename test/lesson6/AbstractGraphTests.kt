@@ -29,6 +29,34 @@ abstract class AbstractGraphTests {
     }
 
     fun findEulerLoop(findEulerLoop: Graph.() -> List<Graph.Edge>) {
+        // Мои тесты
+        val myGraph = GraphBuilder().apply {
+            val a = addVertex("A")
+            val b = addVertex("B")
+            val c = addVertex("C")
+            val d = addVertex("D")
+            addConnection(a, b)
+            addConnection(b, c)
+            addConnection(c, d)
+            addConnection(d, a)
+            addConnection(a, c)
+        }.build()
+        val myLoop = myGraph.findEulerLoop()
+        myLoop.assert(shouldExist = false, graph = myGraph)
+        val myGraph2 = GraphBuilder().apply {
+            val a = addVertex("A")
+            val b = addVertex("B")
+            val c = addVertex("C")
+            val d = addVertex("D")
+            addConnection(a, b)
+            addConnection(b, c)
+            addConnection(c, d)
+            addConnection(d, a)
+        }.build()
+        val myLoop2 = myGraph2.findEulerLoop()
+        myLoop2.assert(shouldExist = true, graph = myGraph2)
+
+
         val emptyGraph = GraphBuilder().build()
         val emptyLoop = emptyGraph.findEulerLoop()
         assertTrue(emptyLoop.isEmpty(), "Euler loop should be empty for the empty graph")
