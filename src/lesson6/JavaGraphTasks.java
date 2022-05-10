@@ -36,7 +36,7 @@ public class JavaGraphTasks {
         // T = O(V^2 + E^2) - Проверка сущесвтования эйлерова цикла работает за О(V^2), т.к. посещается каждая вершина и
         // нахождение всех соседей вершины это О(V). Поиск эйлерова цикла требует прохождения по каждому ребру 1 раз
         // при этом на каждом шаге за О(Е) ищутся все ребра, инцидентные текущей вершине, что в сумме дает О(Е^2)
-        // R = O() -
+        // R = O(E) - два списка размером E
 
         // Проверка сущесвтования эйлерова цикла
         if (graph.getVertices().size() < 2) return new ArrayList<>();
@@ -46,17 +46,16 @@ public class JavaGraphTasks {
 
         Set<Graph.Edge> path = new HashSet<>(graph.getEdges().size());
         List<Graph.Edge> result = new ArrayList<>(graph.getEdges().size());
-        eulerLoop(graph, graph.getVertices().iterator().next(), path, result);
+        euler(graph, graph.getVertices().iterator().next(), path, result);
         return result;
     }
 
-    //
-    private static void eulerLoop(Graph graph, Graph.Vertex start, Set<Graph.Edge> visited, List<Graph.Edge> result) {
+    private static void euler(Graph graph, Graph.Vertex start, Set<Graph.Edge> visited, List<Graph.Edge> result) {
         Map<Graph.Vertex, Graph.Edge> connections = graph.getConnections(start);
         for (Graph.Vertex vertex : connections.keySet()) {
             if (!visited.contains(connections.get(vertex))) {
                 visited.add(connections.get(vertex));
-                eulerLoop(graph, vertex, visited, result);
+                euler(graph, vertex, visited, result);
                 result.add(connections.get(vertex));
             }
         }
